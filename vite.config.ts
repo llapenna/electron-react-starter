@@ -14,7 +14,10 @@ const removeElectronDist = () => {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
+  const isBuilding = command === 'build';
+  const isServing = command === 'serve';
+
   removeElectronDist();
 
   return {
@@ -25,12 +28,34 @@ export default defineConfig(() => {
     },
     plugins: [
       react(),
-      electron({
-        entry: 'electron/main.ts',
-        onstart(options) {
-          options.startup();
+      electron([
+        {
+          entry: 'electron/main.ts',
+          onstart(options) {
+            options.startup();
+          },
+          vite: {
+            build: {
+              sourcemap: isServing,
+              minify: isBuilding,
+            },
+          },
         },
-      }),
+        {
+          entry: 'electron/preload.ts',
+          onstart(options) {
+            // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
+            // instead of restarting the entire Electron App.
+            options.reload();
+          },
+          vite: {
+            build: {
+              sourcemap: isServing ? 'inline' : false,
+              minify: isBuilding,
+            },
+          },
+        },
+      ]),
     ],
   };
 });
