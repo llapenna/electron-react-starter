@@ -1,3 +1,6 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import electron from "vite-plugin-electron";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -11,6 +14,18 @@ const removeElectronDist = () => {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
+export default defineConfig(() => {
+  removeElectronDist();
+
+  return {
+    plugins: [
+      react(),
+      electron({
+        entry: "electron/main.ts",
+        onstart(options) {
+          options.startup();
+        },
+      }),
+    ],
+  };
+});
