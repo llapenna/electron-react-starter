@@ -6,7 +6,7 @@ This template provides a minimal setup to get Electron + React working, powered 
 
 ## Features
 
-- 🔥 Hot restart and reload
+- 🔥 Hot [restart](https://electron-vite.github.io/guide/features.html#hot-restart) and [reload](https://electron-vite.github.io/guide/features.html#hot-reload)
 - 📦 Packaging for Windows, macOS and Linux
 - 📝 TypeScript support
 - 🔧 Based on the [Electron + Vite](https://electron-vite.github.io/) templates
